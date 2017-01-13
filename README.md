@@ -117,3 +117,16 @@ This information was taken from preliminary data sheets on the Cellular RAM 1.5 
 |:--:|:--:|:-----:|:--:|:-:|:-:|:---:|:---:|:-:|:---:|
 | mode | initialLatency | latencyCounter | waitPolarity | 0 | waitConfig | 0 | driveStrength | burstWrap | burstLength |
 
+The meaning of the bits follows.
+
+|Bit|Name|Default|Purpose|
+|:-:|:--:|:-----:|:------|
+|15|mode|1|**0** selects Synchronous Burst Access Mode; **1** selects asynchronous access mode.|
+|14|initialLatency|0|**0** selects Variable Initial Latency; **1** selects Fixed Initial Latency.|
+|13:11|latencyCounter|3|**2** through **6** selects the number of clocks to wait before proceeding with the actual data transfer.  This value depends on how fast you clock the PSRAM chip.  If assigned a value *n*, then the latency is set to *n*+1 clocks.  **0**, **1**, and **7** are reserved and must not be used.|
+|10|waitPolarity|1|**0** configures the WAIT signal from the PSRAM chip to be active-LOW, in effect turning this signal into a READY signal instead.  **1** configures the WAIT signal to be active-HIGH.|
+|8|waitConfig|1|**0** configures WAIT to be driven *during* the delay.  **1** configures it to be driven *one clock ahead* of the delay.|
+|5:4|driveStrength|1|This setting configures how much current the PSRAM chip drives its wires with.  **0** configures full drive strength, **1** configures one half drive strength, **2** one quarter, and **3** is reserved and should not be used.|
+|3|burstWrap|1|**0** configures a burst access to wrap within the burst length.  This ensures it never crosses a page boundary.  **1** configures a burst to proceed linearly from its start address.  Bursting close to a page boundary can cause that boundary to be crossed, leading to slower read times.  Be sure to monitor the WAIT pin when using this mode.|
+|2:0|burstLength|7|Configures how many halfwords to transfer in a burst.  Valid values include **1** for 4 halfwords, **2** for 8 halfwords, **3** for 16 halfwords, **4** for 32 halfwords, and **7** for continuous burst.  All other values are reserved and should not be used.|
+
